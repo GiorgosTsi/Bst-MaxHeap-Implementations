@@ -41,6 +41,7 @@ public class BSTarrayImpl implements BST{
     /*right pointer of every node is stored in array[2] idx */
     private static final int right = 2;
 
+    /*Constructor */
     public BSTarrayImpl(){
         this.rootIndex = -1;//there is no root node yet.
         /*It's better to make a 3xN matrix
@@ -181,45 +182,101 @@ public class BSTarrayImpl implements BST{
     	//curr index points to the node to delete,and parent index is the parent of curr.
     	
     	
-    	/*1) If node to delete is a leaf: */
+    	/************************1) If node to delete is a leaf: ***********************/
     	
-    	if(this.array[left][curr] == 0  &&  this.array[right][curr] == 0) //if left and right pointers are null,node is a leaf.
+    	if(this.array[left][curr] == NULL  &&  this.array[right][curr] == NULL) //if left and right pointers are null,node is a leaf.
     		if(curr != this.rootIndex) {
     			
     			if(this.array[left][parent] == curr){//if curr is the left child of the parent.
     				//set the left pointer of the parent null
     				this.array[left][parent] = NULL;
     				oldAvail = this.avail;
-    				// append the free list:
-    				this.avail = curr; 
-    				this.array[right][curr] = oldAvail;//old avail value will be the next position to insert an element.
+    				this.updateFreeList(curr, oldAvail);//curr is the newAvail position.
     			}
     			else {//curr is the right child of the parent.
     				//set the right pointer of the parent null
     				this.array[right][parent] = NULL;
     				oldAvail = this.avail;
-    				// append the free list:
-    				this.avail = curr; 
-    				this.array[right][curr] = oldAvail;//old avail value will be the next position to insert an element.
+    				this.updateFreeList(curr, oldAvail);//curr is the newAvail position.
 				}
     		}
     	
     		else // if node to delete is the root:
     			this.rootIndex = -1;
     	
-    	/*2) Node to delete has one child(left or right) */
+    	/********************2) Node to delete has one child(left or right) *********************/
     	
-    	else if(this.array[left][curr] == 0  ||  this.array[right][curr] == 0) {
+    	else if(this.array[left][curr] == NULL  ||  this.array[right][curr] == NULL) {
+    		
+    		int childOfNodeToDelete = this.array[left][curr] == NULL ? this.array[right][curr] : this.array[left][curr];
     		
     		if(curr != this.rootIndex) {
     			
+    			if(this.array[left][parent] == curr){//if curr is the left child of the parent.
+    				//set the left pointer of the parent to curr's child.
+    				this.array[left][parent] = childOfNodeToDelete;
+    				oldAvail = this.avail;
+    				this.updateFreeList(curr, oldAvail);//curr is the newAvail position.
+    			}
+    			else {//curr is the right child of the parent.
+    				//set the right pointer of the parent to curr's child.
+    				this.array[right][parent] = childOfNodeToDelete;
+    				oldAvail = this.avail;
+    				this.updateFreeList(curr, oldAvail);//curr is the newAvail position.
+				}
+    			
     		}
-    		else {
-				
+    		else {//node to delete is the root.Root also has one only child.
+    			/*Change the root index and update the free list */
+				this.rootIndex = childOfNodeToDelete;//the new root is the child of the old root.
+				oldAvail = this.avail;
+				this.updateFreeList(curr, oldAvail);
 			}
     	}
     	
-
+    	/***************** 3)Node to delete has both children. ******************************/
+    	else {
+			int minRightSubtreeNode = this.findMinimumKeyNode(this.array[right][curr]);
+			int minRightSubtreeElement = this.array[0][minRightSubtreeNode];
+			 /*Delete the minimum element from right subtree node */
+			this.remove(minRightSubtreeElement);//the free list will be updated automatically.
+			/*Make the minimum element of the right subtree,the new root of this subtree */
+			this.array[0][curr] = minRightSubtreeElement;
+		}
+    }
+    
+    /**
+     * Method to find the minimum key node of the tree
+     * with the given root.
+     * @param root of the tree to find the minimum key
+     * @return index of the node with the minimum key. 
+     *  */
+    private int findMinimumKeyNode(int root) {
+    	
+    	if(root == NULL) // if tree is empty.
+    		return -1;
+    	
+    	int current = root;
+    	
+    	/*Minimum key node is the leftmost one. */
+    	while(this.array[left][current] != NULL) 
+    		current = this.array[left][current];
+    	
+    	//current now is the index with the minimum key node.
+    	return current;
+    }
+    
+    /**
+     * Method to update the free list.
+     * @param new and old avail positions.
+     * This method appends the stack of avail positions
+     * with the newAvail value.The next avail position after the newAvail
+     * is the old top of stack value.
+     *  */
+    private void updateFreeList(int newAvail,int oldAvail) {
+    	// append the free list:
+    	this.avail = newAvail;
+    	this.array[right][newAvail] = oldAvail;//old avail value will be the next position to insert an element.
     }
 
     
