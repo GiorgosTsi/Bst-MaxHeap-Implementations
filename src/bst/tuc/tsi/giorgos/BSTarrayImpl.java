@@ -207,9 +207,11 @@ public class BSTarrayImpl implements BST{
 				}
     		}
     	
-    		else // if node to delete is the root:
+    		else { // if node to delete is the root:
     			this.rootIndex = -1;
-    		
+    			oldAvail = this.avail;
+    			this.updateFreeList(curr, oldAvail);
+    		}
     		this.size--;//decrease the size of the structure.
     	
     	}
@@ -342,6 +344,24 @@ public class BSTarrayImpl implements BST{
     	this.rootIndex = -1;
     	this.initializeFreeList();
     }
+    
+    
+    /**
+     * Method to print the array of this bst implementation.
+     * From this you can check if the free list works properly. 
+     *  */
+    public void printArray() {
+    	System.out.println("Key left right");
+    	for(int i=0; i<15 /*this.array[0].length*/; i++) {
+    		System.out.print("\n");
+    		for(int j=0 ; j<this.array.length; j++) {
+    			System.out.print(this.array[j][i] + "   ");
+    		}
+    		
+    	}
+    			
+    			
+    }
 
     @Override
     public boolean isEmpty(){
@@ -378,5 +398,9 @@ public class BSTarrayImpl implements BST{
     @Override
     public int size() {
     	return this.size;
+    }
+    
+    public int getAvail() {
+    	return this.avail;
     }
 }

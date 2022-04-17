@@ -92,6 +92,7 @@ public class Main2 {
         binarySearchTree.remove(7);
         System.out.println("Removing from empty tree :size of tree: " + binarySearchTree.size() );
         binarySearchTree.printBST();
+        
 
     }
 }

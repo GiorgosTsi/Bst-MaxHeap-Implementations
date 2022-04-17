@@ -161,19 +161,15 @@ public class BinarySearchTreeWithPointers implements  BST{
 
             /*If key to find is smaller than
             * this node's key,traverse the left subtree. */
-            else if(key < current.getKey()) {
+            else if(key < current.getKey()) 
                 current = current.getLeft();
-                if (current!=null  && key == current.getKey())
-                    return true;
-            }
+            
 
             /*If key to find is greater than
              * this node's key,traverse the right subtree. */
-            else if(key > current.getKey()) {
+            else if(key > current.getKey()) 
                 current = current.getRight();
-                if (current!=null  && key == current.getKey())
-                    return true;
-            }
+            
         }
 
         //to be here the element does not exist.
