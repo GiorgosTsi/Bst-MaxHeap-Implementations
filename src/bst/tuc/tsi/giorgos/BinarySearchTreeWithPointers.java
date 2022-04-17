@@ -1,12 +1,21 @@
 package bst.tuc.tsi.giorgos;
 
 public class BinarySearchTreeWithPointers implements  BST{
+	
     private Node root; //root of the tree.
+    private int size; //number of nodes on the bst structure.
 
+    public BinarySearchTreeWithPointers() {
+		this.root = null;
+		this.size = 0;
+	}
+    
+    
     @Override
     public void insert(int key) {
        // this.root = this.insertHelpRecursive(this.root,key);
         this.insertHelpIterative(key);
+        this.size++;
     }
 
 
@@ -49,6 +58,7 @@ public class BinarySearchTreeWithPointers implements  BST{
         return this.findHelpIterative(key,this.root);
     }
 
+/***************************************HELP METHODS****************************************/
     /**
      * Method used to insert a key in the bst structure.
      * Uses recursion.We need to return the new root
@@ -300,6 +310,8 @@ public class BinarySearchTreeWithPointers implements  BST{
                     parent.setLeft(null);
             else
                 this.root = null;//else set the root to null.
+            
+            this.size--;//decrease the size of the structure
         }
 
         /*2) Node to delete has one child(left or right) */
@@ -314,6 +326,8 @@ public class BinarySearchTreeWithPointers implements  BST{
                     parent.setRight(childOfNodeToDelete);
             else
                 this.root = childOfNodeToDelete;
+            
+            this.size--;//decrease the size of the structure
 
         }
         /*3) Node to delete has two children(left and right) */
@@ -323,6 +337,7 @@ public class BinarySearchTreeWithPointers implements  BST{
             this.remove(minRightSubtreeElement);
             /*Make the minimum element of the right subtree,the new root of this subtree */
             node.setKey(minRightSubtreeElement);
+            /*There is no need to update the size.The size will be updated from the above remove call. */
         }
     }
 
@@ -348,6 +363,11 @@ public class BinarySearchTreeWithPointers implements  BST{
         }
 
         return parent;
+    }
+    
+    @Override
+    public int size() {
+    	return this.size;
     }
 
 

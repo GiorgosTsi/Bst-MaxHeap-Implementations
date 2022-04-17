@@ -12,17 +12,20 @@ public class Main2 {
         binarySearchTree.insert(10);
         binarySearchTree.insert(6);
         binarySearchTree.insert(4);
-
+        
         binarySearchTree.printBST();
+        System.out.println("Size of tree: " + binarySearchTree.size() );
 
         binarySearchTree.insert(2);
         binarySearchTree.insert(14);
         binarySearchTree.insert(7);
         binarySearchTree.insert(1);
+       
         System.out.println("*".repeat(60));
         binarySearchTree.printBST();
+        System.out.println("Size of tree: " + binarySearchTree.size() );
 
-        System.out.println("Search find Method:");
+        System.out.println("\n\nSearch find Method:");
         System.out.println("*".repeat(60));
         /*Existing keys: */
         System.out.println(binarySearchTree.find(10));
@@ -44,40 +47,50 @@ public class Main2 {
         System.out.println("1)Remove a leaf:1");
         binarySearchTree.remove(1);
         binarySearchTree.printBST();
+        System.out.println("Size of tree: " + binarySearchTree.size() );
         System.out.println("\n\n2)Remove a node with one child(right child):6");
         binarySearchTree.remove(6);
         binarySearchTree.printBST();
+        System.out.println("Size of tree: " + binarySearchTree.size() );
 
         System.out.println("\n\n2)Remove a node leaf:4");
         binarySearchTree.remove(4);
         binarySearchTree.printBST();
+        System.out.println("Size of tree: " + binarySearchTree.size() );
 
         System.out.println("\n\n2)Remove a node with one child(left child):3");
         binarySearchTree.remove(3);
         binarySearchTree.printBST();
+        System.out.println("Size of tree: " + binarySearchTree.size() );
 
         System.out.println("\n\n3)Remove a node with two children:9");
         binarySearchTree.remove(9);
         binarySearchTree.printBST();
+        System.out.println("Size of tree: " + binarySearchTree.size() );
 
         System.out.println("\n\n3)Remove a node with two children:10");
         binarySearchTree.remove(10);
         binarySearchTree.printBST();
+        System.out.println("Size of tree: " + binarySearchTree.size() );
 
         System.out.println("\n\n3)Remove a node with two children(root):5");
         binarySearchTree.remove(5);
         binarySearchTree.printBST();
+        System.out.println("Size of tree: " + binarySearchTree.size() );
 
         System.out.println("\n\n3)Remove a node which does not exist: 23");
         binarySearchTree.remove(23);
         binarySearchTree.printBST();
+        System.out.println("Size of tree: " + binarySearchTree.size() );
 
         System.out.println("\n\n3)Remove all the nodes and try to remove a key from an empty tree:");
         binarySearchTree.remove(14);
         binarySearchTree.remove(2);
         binarySearchTree.remove(7);
+        System.out.println("Size of tree: " + binarySearchTree.size() );
         /* empty tree */
         binarySearchTree.remove(7);
+        System.out.println("Removing from empty tree :size of tree: " + binarySearchTree.size() );
         binarySearchTree.printBST();
 
     }

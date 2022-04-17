@@ -30,6 +30,11 @@ public interface BST {
      * @return true if the tree is empty.
      * */
     public boolean isEmpty();
+    
+    /**
+     * @return the total number of nodes on the bst structure.
+     *  */
+    public int size();
 
 
 }

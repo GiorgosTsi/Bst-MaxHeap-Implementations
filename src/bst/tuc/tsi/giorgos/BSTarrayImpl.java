@@ -28,6 +28,9 @@ public class BSTarrayImpl implements BST{
 
     /*Next available insertion index(top of the stack): */
     private int avail;
+    
+    /*Total number of nodes on the bst structure: */
+    private int size;
 
     /* Constants */
     //-2 to an array index indicates that the (left or right) pointer is null.
@@ -44,6 +47,7 @@ public class BSTarrayImpl implements BST{
     /*Constructor */
     public BSTarrayImpl(){
         this.rootIndex = -1;//there is no root node yet.
+        this.size = 0;
         /*It's better to make a 3xN matrix
         * than a Nx3.In a 3xN matrix every column is
         * a node and the first row indicates the key(data)
@@ -148,6 +152,8 @@ public class BSTarrayImpl implements BST{
             this.avail = newAvail;
 
         }
+        
+        this.size++;//increase the size of the structure.
     }
 
     /**
@@ -184,7 +190,7 @@ public class BSTarrayImpl implements BST{
     	
     	/************************1) If node to delete is a leaf: ***********************/
     	
-    	if(this.array[left][curr] == NULL  &&  this.array[right][curr] == NULL) //if left and right pointers are null,node is a leaf.
+    	if(this.array[left][curr] == NULL  &&  this.array[right][curr] == NULL) { //if left and right pointers are null,node is a leaf.
     		if(curr != this.rootIndex) {
     			
     			if(this.array[left][parent] == curr){//if curr is the left child of the parent.
@@ -203,7 +209,10 @@ public class BSTarrayImpl implements BST{
     	
     		else // if node to delete is the root:
     			this.rootIndex = -1;
+    		
+    		this.size--;//decrease the size of the structure.
     	
+    	}
     	/********************2) Node to delete has one child(left or right) *********************/
     	
     	else if(this.array[left][curr] == NULL  ||  this.array[right][curr] == NULL) {
@@ -232,6 +241,8 @@ public class BSTarrayImpl implements BST{
 				oldAvail = this.avail;
 				this.updateFreeList(curr, oldAvail);
 			}
+    		
+    		this.size--;//decrease the size of the structure.
     	}
     	
     	/***************** 3)Node to delete has both children. ******************************/
@@ -242,7 +253,9 @@ public class BSTarrayImpl implements BST{
 			this.remove(minRightSubtreeElement);//the free list will be updated automatically.
 			/*Make the minimum element of the right subtree,the new root of this subtree */
 			this.array[0][curr] = minRightSubtreeElement;
+			/*The size of the list will be updated from the remove call made before. */
 		}
+    	
     }
     
     /**
@@ -360,5 +373,10 @@ public class BSTarrayImpl implements BST{
 
         /*Print Left subtree */
         printHelp(this.array[left][root],spaces + 10);
+    }
+    
+    @Override
+    public int size() {
+    	return this.size;
     }
 }
