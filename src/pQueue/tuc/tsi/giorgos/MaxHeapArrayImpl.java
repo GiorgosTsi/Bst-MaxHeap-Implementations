@@ -54,6 +54,10 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 	}
 	
 	
+	/**
+	 * Method to insert a key in the max heap structure.
+	 * @param key to be inserted. 
+	 *  */
 	@Override
 	public void insert(int key) {
 	
@@ -68,10 +72,25 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 		this.siftUp(this.size - 1);
 	}
 
+	/**
+	 * Method to remove the higher priority element from
+	 * the max heap structure.
+	 * @return the key of the element deleted. 
+	 *  */
 	@Override
 	public int remove() {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		/*1) Swap the 'root' with the last item inserted.(Last node is in the pos size-1) */
+		swap(0, size - 1);//in pos 0 is the root, and in pos size-1 the last element inserted.
+		
+		/*2)Delete the last element(old root) */
+		size--;//by decreasing the size of the array,we 'explicitly' delete that element.
+		//The new element inserted will override that value,so it is like deleting it.
+		
+		/*3) Sift down the new root,because we have to satisfy the max heap property .*/
+		siftDown(0);
+		
+		return this.heap[size];//heap[size] is the element 'deleted',the old 'root'.
 	}
 	
 	/**
@@ -121,6 +140,14 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 		this.size = 0;//size of the heap is 0
 	}
 	
+	/**
+	 * Method to find if the node in pos index is a leaf.
+	 *  */
+	public boolean isLeaf(int pos) {
+		
+		return (pos >= size / 2) && (pos < size);
+	}
+	
 /************************* Auxiliary methods for the array implementation of the heap ********************************/
 	
 	/**
@@ -152,7 +179,7 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 	
 	
 	/**
-	 * Method to sift up a key in the pos index,
+	 * Method to sift up a key from pos index,to the appropriate index
 	 * to satisfy the heap property.Used when inserting an element!
 	 * @param pos of the key to sift up,if we have to.
 	 * the element will be sifted up only if his value(key)
@@ -168,6 +195,36 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 			pos = parent(pos);//new pos to sift up is the parent's pos!
 		}
 	}
+	
+	/**
+	 * Method to sift down a key from the pos index
+	 * to the appropriate index so that the max heap
+	 * property is satisfied.Used when removing the
+	 * highest priority element.
+	 * @param pos of the key to sift down
+	 * The element will be sifted down until it's not a leaf
+	 * or his children have smaller keys and so the property is satisfied.  
+	 *  */
+	private void siftDown(int pos) {
+		
+		while(!this.isLeaf(pos)) {
+			int higherChild = this.leftChild(pos);
+			int rightChild = this.rightChild(pos);
+			
+			/*Find the higher of the two children(if there are 2 children,else the higher is the left one(only that exists!)) */
+			if((rightChild < size) && ( this.heap[rightChild] > this.heap[leftChild(pos)] ) )//if rightChild>=size,then there is only the left child.
+				higherChild = rightChild;// Set this variable to greater child's value
+			
+			/*swap pos node with higher child node,only if pos node has smaller key value! */
+			if(this.heap[pos] < this.heap[higherChild]) 
+				this.swap(pos, higherChild);
+			else 
+				return;//property is satisfied!
+			
+			pos = higherChild;
+		}
+	}
+	
 	
 	/**
 	 * swap the values of the array on indices idx1 and idx2.
