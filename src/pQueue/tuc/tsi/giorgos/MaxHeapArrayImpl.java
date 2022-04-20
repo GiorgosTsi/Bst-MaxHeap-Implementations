@@ -3,6 +3,7 @@ package pQueue.tuc.tsi.giorgos;
 import Assert.tuc.tsi.giorgos.Assert;
 
 /**
+ * @author giorgos tsi
  * Max Heap is a way to implement
  * a priority queue.We are going to 
  * implement a max heap data structure
@@ -42,10 +43,19 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 	 * In a max heap, for any given node C, 
 	 * if P is a parent node of C, 
 	 * then the key (the value) of P is 
-	 * greater than or equal to the key of C 
+	 * greater than or equal to the key of C. 
 	 *  */
 	private void buildHeap() {	
-		
+		/*To build a max heap structure with given keys:
+		 * 	1)Construct a random binary tree with these keys,(already constructed.We have an array implemented tree!)
+		 * 	and siftDown every node to make the property satisfied.
+		 *	2)The leaf nodes are already heaps.(Their children have smaller keys(0)).
+		 * 	  Start from the last non leaf node to the first node and sift down every node
+		 * 	  so the property to be satisfied.	 	
+		 *  */
+		// leaf nodes are all the nodes which have: pos >= (size/2) 
+		for(int pos=size/2 - 1; pos>=0 ; pos--)
+			siftDown(pos);
 	}
 
 	@Override

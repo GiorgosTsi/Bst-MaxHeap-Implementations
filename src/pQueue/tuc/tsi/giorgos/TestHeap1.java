@@ -5,6 +5,7 @@ public class TestHeap1 {
 	public static void main(String args[]) {
 		MaxHeapArrayImpl mheap = new MaxHeapArrayImpl();
 		
+		System.out.println("Test insert,remove routines,and also test the construction of the heap with given keys one by one.(O(nlogn))");
 		mheap.insert(57);
 		mheap.insert(25);
 		mheap.insert(48);
@@ -53,6 +54,14 @@ public class TestHeap1 {
 		
 		System.out.println("call remove method(Delete the last element): ");
 		mheap.remove();
+		mheap.printHeap();
+		
+		System.out.println("\n\nTest buildheap routine.Construct a max heap by giving initially all the keys.(0(N))");
+		int[] arr = new int[10];
+		for(int i=0; i<10; i++)
+			arr[i] = i+5;
+			
+		mheap = new MaxHeapArrayImpl(arr);
 		mheap.printHeap();
 		
 		

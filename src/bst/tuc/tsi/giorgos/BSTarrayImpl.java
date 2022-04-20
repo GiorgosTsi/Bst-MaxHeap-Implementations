@@ -371,28 +371,28 @@ public class BSTarrayImpl implements BST{
     /**
      * Method used to print the bst on inorder traversal.
      * Uses recursion.
-     * @param root of the tree/subtree and the number of spaces
+     * @param rootIdx of the tree/subtree and the number of spaces
      *             to print on the line in which the element will
      *             be printed.
      * We print 10 spaces for every tree level.
      * */
-    private void printHelp(int root , int spaces){
-        if(root == -2)//if index is -2 that means that pointer is null.Base case.
+    private void printHelp(int rootIdx , int spaces){
+        if(rootIdx == -2)//if index is -2 that means that pointer is null.Base case.
             return;
 
         /*Print Right subtree */
-        printHelp(array[right][root],spaces + 10);//10 spaces for every tree level.
+        printHelp(array[right][rootIdx],spaces + 10);//10 spaces for every tree level.
 
         /*print the root node */
         System.out.print("\n");
         for(int i=0; i<spaces; i++)
             System.out.print(" ");
 
-        System.out.print(array[0][root]);
+        System.out.print(array[0][rootIdx]);
         System.out.print("\n");
 
         /*Print Left subtree */
-        printHelp(this.array[left][root],spaces + 10);
+        printHelp(this.array[left][rootIdx],spaces + 10);
     }
     
     @Override

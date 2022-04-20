@@ -1,6 +1,7 @@
 package pQueue.tuc.tsi.giorgos;
 
 /**
+ * @author giorgos tsi
  * The interface of the priority queue structure.
  * Internally,priority queue will be implemented
  * using a max heap structure.The abstract data type
