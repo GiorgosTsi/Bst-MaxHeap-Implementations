@@ -8,9 +8,9 @@ import Assert.tuc.tsi.giorgos.Assert;
  * a priority queue.We are going to 
  * implement a max heap data structure
  * with dynamic way(implementation with pointers).
- * Insertion and deletion in a heap need access to the right most child of the tree. For array implementation, 
+ * Insertion and deletion in a heap need access to the right most leaf at the bottom level. For array implementation, 
  * this is easy. For dynamic memory implementation of a heap, this is trickier, as we do not want to exceed 
- * O(logn) of insert/delete itself.So we made the getParentOfRightMostNode method.
+ * O(logn) of insert/delete itself.So we made the getParentOfRightMostLeaf method.
  *  */
 public class MaxHeapPointers implements PriorityQueue{
 
@@ -48,9 +48,9 @@ public class MaxHeapPointers implements PriorityQueue{
 		
 		/*1) Insert the element in the next right most node available! */
 		
-		//to insert an element to the right most available node we
-		//will find the father of the right most node without changing logn complexity for insertion.
-		HeapNode curr,parent = this.getParentOfRightMost(root, ++size);//increase the size!!
+		//to insert an element to the left most available leaf(at the bottom level) we
+		//will find the father of the right most leaf(the new node) without changing logn complexity for insertion.
+		HeapNode curr,parent = this.getParentOfRightMostLeaf(root, ++size);//increase the size!!
 		curr = new HeapNode(key, parent);
 		
 		if(parent.getLeft() == null) 
@@ -80,18 +80,18 @@ public class MaxHeapPointers implements PriorityQueue{
 			return elementDeleted;
 		}
 		
-		/*1) swap keys between root and right most node.(Firstly we need to find the right most node!) */
+		/*1) swap keys between root and right most leaf(bottom level).(Firstly we need to find the right most leaf!) */
 		
-		HeapNode rightMostNode = this.getRightMostNode(root, size);
+		HeapNode rightMostNode = this.getRightMostLeaf(root, size);
 		this.swapKeys(rightMostNode, root);//swap their keys.
 		
 		/*2) delete the new right most node(the old root!) */
 		
 		HeapNode parent = rightMostNode.getParent();
 		
-		if(parent.getRight() == rightMostNode)//parent.right is the right most child!Should be deleted
+		if(parent.getRight() == rightMostNode)//parent.right is the right most leaf!Should be deleted
 			parent.setRight(null);
-		else //parent.left is the right most child!Should be deleted.
+		else //parent.left is the right most leaf!Should be deleted.
 			parent.setLeft(null);
 		
 		/*3) Sift Down the new root so we keep the property satisfied */
@@ -190,12 +190,12 @@ public class MaxHeapPointers implements PriorityQueue{
 /*****************************Auxiliary Methods used in the dynamic memory implementation ************************************/
 	
 	/**
-	 * Assuming that a tree starting at rootNode is complete, get the parent node of the right most tree(Heaps are complete)
+	 * Assuming that a tree starting at rootNode is complete, get the parent node of the right most leaf(Heaps are complete)
 	 * if the tree has numberOfNodes nodes
 	 * Based on slide 18 of https://appsrv.cse.cuhk.edu.hk/~taoyf/course/2100/21-fall/lec/priority-q.pdf
 	 * Convert int to binary representation string https://mkyong.com/java/java-convert-an-integer-to-a-binary-string/
 	 * numberOfNodes must be at least 1.
-	 * This method will find the parent of the right most node in the tree.When inserting an element
+	 * This method will find the parent of the right most leaf(at bottom level) in the tree.When inserting an element
 	 * we have to put as parameter the new size(increased),so we can find the parent of the node in which
 	 * we will insert the key.We assume that this node is already in the tree so we can find his parent.
 	 * When removing an element we put as parameter the actual size of the tree before decreasing it.
@@ -203,7 +203,7 @@ public class MaxHeapPointers implements PriorityQueue{
 	 * @param numberOfElements(+1 when needed for adding element)
 	 * @return parent of right most node
 	 */
-	 private HeapNode getParentOfRightMost(HeapNode rootNode, int numberOfNodes) {
+	 private HeapNode getParentOfRightMostLeaf(HeapNode rootNode, int numberOfNodes) {
 		 
 		 if (numberOfNodes == 0 || numberOfNodes < 0) { // invalid
 			 // ERROR
@@ -216,10 +216,10 @@ public class MaxHeapPointers implements PriorityQueue{
 		 // iterate from 2nd bit up to second to last bit 
 		 for (int currentPos = 1; currentPos< asBinary.length()-1; currentPos++) 
 			 if (asBinary.charAt(currentPos) == '0') 
-				 current = current.getLeft();//cast to heap node
+				 current = current.getLeft();
 			 
 			 else 
-				 current = current.getRight();//cast to heap node
+				 current = current.getRight();
 		 	
 		 
 	 
@@ -231,11 +231,11 @@ public class MaxHeapPointers implements PriorityQueue{
 	  * using the get parent of right most node method.
 	  * @param root node
 	  * @param number of nodes
-	  * @return right most node of the tree 
+	  * @return right most leaf at the bottom level of the tree 
 	  *  */
-	 private HeapNode getRightMostNode(HeapNode rootNode,int numberOfNodes) {
+	 private HeapNode getRightMostLeaf(HeapNode rootNode,int numberOfNodes) {
 		 
-		 HeapNode parent = this.getParentOfRightMost(rootNode, numberOfNodes);
+		 HeapNode parent = this.getParentOfRightMostLeaf(rootNode, numberOfNodes);
 		 Assert.notNull(parent);//parent should not be null!
 		 return parent.getRight() == null ? parent.getLeft() : parent.getRight() ;
 	 }
