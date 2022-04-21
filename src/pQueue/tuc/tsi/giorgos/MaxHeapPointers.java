@@ -1,6 +1,6 @@
 package pQueue.tuc.tsi.giorgos;
 
-import bst.tuc.tsi.giorgos.Node;
+import Assert.tuc.tsi.giorgos.Assert;
 
 /**
  * @author giorgos tsi
@@ -58,10 +58,43 @@ public class MaxHeapPointers implements PriorityQueue{
 		this.siftUp(curr);
 	}
 
+	/**
+	 * Method to remove the higher priority element from
+	 * the max heap structure.
+	 * @return the key of the element deleted. 
+	 *  */
 	@Override
 	public int remove() {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		Assert.notFalse(size > 0, "Heap is empty");
+		int elementDeleted = root.getKey();
+		
+		if(this.size == 1) {//if heap tree has only the root.
+			this.root = null;
+			this.size--;;
+			return elementDeleted;
+		}
+		
+		/*1) swap keys between root and right most node.(Firstly we need to find the right most node!) */
+		
+		HeapNode rightMostNode = this.getRightMostNode(root, size);
+		this.swapKeys(rightMostNode, root);//swap their keys.
+		
+		/*2) delete the new right most node(the old root!) */
+		
+		HeapNode parent = rightMostNode.getParent();
+		if(parent.getRight() != null)//parent.right is the right most child!Should be deleted
+			parent.setRight(null);
+		else //parent.left is the right most child!Should be deleted.
+			parent.setLeft(null);
+		
+		/*3) Sift Down the new root so we keep the property satisfied */
+		this.siftDown(root);
+		//decrease the size of the heap!
+		this.size--;
+		
+		//return the deleted key
+		return elementDeleted;
 	}
 
 	@Override
@@ -116,14 +149,28 @@ public class MaxHeapPointers implements PriorityQueue{
 		 // iterate from 2nd bit up to second to last bit 
 		 for (int currentPos = 1; currentPos< asBinary.length()-1; currentPos++) 
 			 if (asBinary.charAt(currentPos) == '0') 
-				 current = (HeapNode) current.getLeft();//cast to heap node
+				 current = current.getLeft();//cast to heap node
 			 
 			 else 
-				 current = (HeapNode) current.getRight();//cast to heap node
+				 current = current.getRight();//cast to heap node
 		 	
 		 
 	 
 		 return current;
+	 }
+	 
+	 /**
+	  * Method to get the right most node in the heap tree,
+	  * using the get parent of right most node method.
+	  * @param root node
+	  * @param number of nodes
+	  * @return right most node of the tree 
+	  *  */
+	 private HeapNode getRightMostNode(HeapNode rootNode,int numberOfNodes) {
+		 
+		 HeapNode parent = this.getParentOfRightMost(rootNode, numberOfNodes);
+		 Assert.notNull(parent);//parent should not be null!
+		 return parent.getRight() == null ? parent.getLeft() : parent.getRight() ;
 	 }
 	 
 	 /**
@@ -137,17 +184,44 @@ public class MaxHeapPointers implements PriorityQueue{
 		
 		while( (curr != root) && ( curr.getParent().getKey() < curr.getKey() ) ) {
 			swapKeys(curr, curr.getParent());
-			curr = (HeapNode) curr.getParent();
+			curr = curr.getParent();
 		}
 			
 	}
 	
 	/**
+	 * Method to sift down a key from the curr node
+	 * to the appropriate node so that the max heap
+	 * property is satisfied.Used when removing the
+	 * highest priority element.
+	 * @param node of the key to sift down
+	 * The element will be sifted down until it's not a leaf
+	 * or his children have smaller keys and so the property is satisfied.  
+	 *  */
+	private void siftDown(HeapNode curr) {
+		
+		while(!curr.isLeaf()) {
+			//find the greater value child:
+			HeapNode greaterValueNode = curr.getLeft();//left child exists for sure.
+			if(curr.getRight() != null && curr.getRight().getKey() > curr.getLeft().getKey() )
+				greaterValueNode = curr.getRight();
+			
+			//if curr's node key < greater value child's key swap their keys.
+			if(curr.getKey() < greaterValueNode.getKey())
+				swapKeys(greaterValueNode, curr);
+			else
+				return;//property is satisfied!
+			
+			curr = greaterValueNode;
+		}
+	
+	}
+	/**
 	 * Method to swap the keys of two nodes.
 	 * @param node1
 	 * @param node2
 	 *  */
-	private void swapKeys(Node node1,Node node2) {
+	private void swapKeys(HeapNode node1,HeapNode node2) {
 		int node1Key = node1.getKey();
 		node1.setKey(node2.getKey());
 		node2.setKey(node1Key);
@@ -160,7 +234,7 @@ public class MaxHeapPointers implements PriorityQueue{
      *             to print on the line in which the element will
      *             be printed.
      * */
-    private void printHelp(Node root,int spaces){
+    private void printHelp(HeapNode root,int spaces){
 
         if(root == null)
             return;

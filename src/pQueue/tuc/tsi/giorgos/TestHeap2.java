@@ -30,6 +30,34 @@ public class TestHeap2 {
 		mheap.insert(70);
 		mheap.insert(6);
 		mheap.printHeap();
+		
+		System.out.println("call remove method: ");
+		mheap.remove();
+		mheap.printHeap();
+		
+		System.out.println("call remove method: ");
+		mheap.remove();
+		mheap.printHeap();
+		
+		System.out.println("call remove method: ");
+		mheap.remove();
+		mheap.printHeap();
+		
+		System.out.println("call remove method: ");
+		mheap.remove();
+		mheap.printHeap();
+		
+		System.out.println("call remove method: ");
+		mheap.remove();
+		mheap.printHeap();
+		
+		System.out.println("call remove method: ");
+		mheap.remove();
+		mheap.printHeap();
+		
+		System.out.println("call remove method(Delete the last element): ");
+		mheap.remove();
+		mheap.printHeap();
 
 	}
 
