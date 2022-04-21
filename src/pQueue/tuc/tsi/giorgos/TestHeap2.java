@@ -58,6 +58,18 @@ public class TestHeap2 {
 		System.out.println("call remove method(Delete the last element): ");
 		mheap.remove();
 		mheap.printHeap();
+		
+		//System.out.println("Call remove for empty heap: ");
+		//mheap.remove(); //throws exception!
+		
+		System.out.println("\n\nTest buildheap routine.Construct a max heap by giving initially all the keys.(0(N))");
+		int[] arr = new int[10];
+		for(int i=0; i<10; i++)
+			arr[i] = i+5;
+		
+		mheap = new MaxHeapPointers(arr);
+		
+		mheap.printHeap();
 
 	}
 

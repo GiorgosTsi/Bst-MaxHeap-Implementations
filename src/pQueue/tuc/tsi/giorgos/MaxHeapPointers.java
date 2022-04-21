@@ -26,6 +26,11 @@ public class MaxHeapPointers implements PriorityQueue{
 		this.size = 0;
 	}
 	
+	/* Heapify.(Build a heap with given keys) */
+	public MaxHeapPointers(int[] keys) {
+		this.size = keys.length;//the new size of the heap
+		this.buildHeap(keys);//fix the heap array so it satisfies the heap property!!
+	}
 	
 	/**
 	 * Method to insert a key in the max heap structure.
@@ -83,7 +88,8 @@ public class MaxHeapPointers implements PriorityQueue{
 		/*2) delete the new right most node(the old root!) */
 		
 		HeapNode parent = rightMostNode.getParent();
-		if(parent.getRight() != null)//parent.right is the right most child!Should be deleted
+		
+		if(parent.getRight() == rightMostNode)//parent.right is the right most child!Should be deleted
 			parent.setRight(null);
 		else //parent.left is the right most child!Should be deleted.
 			parent.setLeft(null);
@@ -118,6 +124,67 @@ public class MaxHeapPointers implements PriorityQueue{
     public void clear() {
     	this.root = null;
     	this.size = 0;
+    }
+    
+    /**
+     * Method used to construct a max heap tree
+     * with given random keys.Cost O(N)
+     * @param keys ( int array )
+     *  */
+    private void buildHeap(int[] keys) {
+    	
+    	/*To build a max heap structure with given keys:
+		 * 	1)Construct a random binary tree with these keys
+		 * 	and siftDown every node to make the property satisfied.
+		 *	2)The leaf nodes are already heaps.(Their children have smaller keys(0)).
+		 * 	  Start from the last non leaf node to the first node and sift down every node
+		 * 	  so the property be satisfied.
+		 * Tips:
+		 * If we firstly make a node array with all the heap nodes needed,We can do something
+		 * similar like the build heap with array implemented heap!We have direct equations
+		 * for the father and children of every node(pos-1/2 ...).Then we can make a random tree
+		 * using these equations(Make the tree by setting every node's pointers).
+		 * And finally do siftDown operations for nodes [0...size/2) to satisfy the property. 	 	
+		 *  */
+    	
+    	//make a node array as said above:
+    	HeapNode[] heap = new HeapNode[keys.length];
+    	for(int i=0; i<keys.length; i++)
+    		heap[i] = new HeapNode(keys[i]);
+    	
+    	//Make the heap tree by setting the pointers:
+    	
+    	this.root = heap[0];//set the root!
+    	
+    	for(int pos=0; pos < heap.length; pos++) {
+    		
+    		/*1) Set parent of node(if exists) */
+    		
+    		if( (pos-1)/2 >= 0 ) // if pos!=0(root) because root has no parent.
+    			heap[pos].setParent(heap[(pos -1)/2]);
+    		else//if pos is the root(0 index)
+    			heap[pos].setParent(null);
+    		
+    		/*2) Set left child(if exists) */
+    		
+    		if( 2 * pos + 1 < size)//left child exists!
+    			heap[pos].setLeft(heap[2 * pos + 1]);
+    		else 
+    			heap[pos].setLeft(null);
+    		
+    		/*3) Set Right child(if exists) */
+    		
+    		if( 2 * pos + 2 < size)//right child exists!
+    			heap[pos].setRight(heap[2 * pos + 2]);
+    		else 
+    			heap[pos].setRight(null);
+    		
+    	}
+    	
+    	/*Now we should siftDown all the non leaf elements to keep the property satisfied: */
+    	for(int i=size/2 - 1; i >= 0; i--)
+    		this.siftDown(heap[i]);
+    	
     }
 
 /*****************************Auxiliary Methods used in the dynamic memory implementation ************************************/
