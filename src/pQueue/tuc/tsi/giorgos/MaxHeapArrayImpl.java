@@ -18,7 +18,7 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 	
 	private int size;//# of elements on the heap
 	
-	private int maxSize;
+	private int maxSize;// max size of the heap.
 	
 	
 	/*Create an empty Max Heap structure.The default array size is 10^6. */
@@ -33,6 +33,7 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 	public MaxHeapArrayImpl(int[] keys) {
 		this.heap = keys; // new heap array
 		this.size = keys.length;//the new size of the heap
+		this.maxSize = keys.length;
 		this.buildHeap();//fix the heap array so it satisfies the heap property!!
 	}
 
@@ -73,7 +74,7 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 	
 		Assert.notFalse(size < maxSize, "Max Heap is full.");
 		
-		/*1) Insert the key in the next free array index: */
+		/*1) Insert the key in the next free array index:(The next right most node available!) */
 		
 		this.heap[this.size++] = key;
 		
@@ -90,6 +91,7 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 	@Override
 	public int remove() {
 		
+		Assert.notFalse(size > 0, "Heap is empty");
 		/*1) Swap the 'root' with the last item inserted.(Last node is in the pos size-1) */
 		swap(0, size - 1);//in pos 0 is the root, and in pos size-1 the last element inserted.
 		
