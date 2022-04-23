@@ -1,5 +1,7 @@
 package bst.tuc.tsi.giorgos;
 
+import org.tuc.counter.MultiCounter;
+
 public class BinarySearchTreeWithPointers implements  BST{
 	
     private Node root; //root of the tree.
@@ -14,14 +16,17 @@ public class BinarySearchTreeWithPointers implements  BST{
     @Override
     public void insert(int key) {
        // this.root = this.insertHelpRecursive(this.root,key);
+    	MultiCounter.resetCounter(1);
         this.insertHelpIterative(key);
         this.size++;
+        MultiCounter.increaseCounter(1);//size++;
     }
 
 
     
     @Override
     public void remove(int key) {
+    	MultiCounter.resetCounter(1);
         //this.root = this.removeHelpRecursive(this.root,key);
         /*Need to assign the return value of the help method
         * because the root may be changed. */
@@ -87,36 +92,46 @@ public class BinarySearchTreeWithPointers implements  BST{
      * @param key to be inserted in the bst structure.
      * This method inserts a key to the structure,
      * using a while loop only and not recursion.
+     * Also counts total operations done while inserting.
+     * (Assignments,Comparisons).The count is stored in
+     * MultiCounter[0] counter.
      * */
     private void insertHelpIterative(int key){
 
         Node current,parent;
         Node newNode = new Node(key);
         current = parent = this.root;
-
+        MultiCounter.increaseCounter(1,3);//3 assignments have been made.
+        
         /*1) If tree is empty: */
-        if(root == null) {
+        if(MultiCounter.increaseCounter(1) && root == null) {
             this.root = newNode;
+            MultiCounter.increaseCounter(1);//one assignment made.
             return;
         }
 
         /*2) If tree is not empty: */
-        while(current != null){//iterate until you reach a leaf.
+        while(MultiCounter.increaseCounter(1) && current != null){//iterate until you reach a leaf.
             //traverse the tree until you find the correct position to insert the key.
             parent=current;
 
-            if( key < current.getKey())
+            if(MultiCounter.increaseCounter(1) && key < current.getKey())
                 current = current.getLeft();
             else
                 current = current.getRight();
+            
+            /*2 assignments made.1)parent = current, 2) current=current.getRight/left */
+            MultiCounter.increaseCounter(1, 2);
         }
         //assertion: current=null and parent is the father of the new node to be inserted.
 
         /*parent now is the parent of the new node to be inserted. */
-        if(key < parent.getKey())
+        if(MultiCounter.increaseCounter(1) && key < parent.getKey())
             parent.setLeft(newNode);
         else
             parent.setRight(newNode);
+        
+        MultiCounter.increaseCounter(1);//one assignment made.setLeft/Right is one assignment.
 
     }
 
@@ -150,26 +165,35 @@ public class BinarySearchTreeWithPointers implements  BST{
 
     }
 
+    /**
+     * Help method to find if an element exists in the
+     * binary search tree,using loops.
+     * This method also counts the total operations done
+     * while searching.We count comparisons,assignments.
+     * These measurements are stored in MultiCounter[0].
+     *  */
     private boolean findHelpIterative(int key,Node root){
 
         Node current = root;
 
-        while(current != null){
+        while(MultiCounter.increaseCounter(1) && current != null){
 
-            if(current.getKey() == key)//if current root is the one to search:
+            if(MultiCounter.increaseCounter(1) && current.getKey() == key)//if current root is the one to search:
                 return true;
 
             /*If key to find is smaller than
             * this node's key,traverse the left subtree. */
-            else if(key < current.getKey()) 
+            else if(MultiCounter.increaseCounter(1) && key < current.getKey()) 
                 current = current.getLeft();
             
 
             /*If key to find is greater than
              * this node's key,traverse the right subtree. */
-            else if(key > current.getKey()) 
+            else if(MultiCounter.increaseCounter(1) && key > current.getKey()) 
                 current = current.getRight();
             
+            //increase the counter.We made one assignment.current=current.getRight/Left.
+            MultiCounter.increaseCounter(1);
         }
 
         //to be here the element does not exist.
@@ -204,6 +228,8 @@ public class BinarySearchTreeWithPointers implements  BST{
     /**
      * @return the minimum key of the bst
      * with root the node given as parameter.
+     * Number of operations made to find the minimum key of the
+     * tree with @param root is stored in MultiCounter[0]
      * */
     private int getMinimumKey(Node root){
         /*The minimum key of the bst,is always in
@@ -211,13 +237,15 @@ public class BinarySearchTreeWithPointers implements  BST{
         * left most node.Then return it's key.
         *  */
         Node current = root;
-        if(root == null)//if the bst is empty.
+        MultiCounter.increaseCounter(1);//one assignment.
+        if(MultiCounter.increaseCounter(1) && root == null)//if the bst is empty.
             return -1;
         /* traverse the bst until you reach the leftmost node.
         * i.e until the next left node is null.
         * */
-        while(current.getLeft() != null){
+        while(MultiCounter.increaseCounter(1) && current.getLeft() != null){
             current = current.getLeft();
+            MultiCounter.increaseCounter(1);//one assignment made.
         }
 
         /*Now current points to the left most node. */
@@ -278,29 +306,34 @@ public class BinarySearchTreeWithPointers implements  BST{
      * */
     private void removeHelpIterative(int key){
 
-        if(this.root == null)//tree is empty.
+        if(MultiCounter.increaseCounter(1) && this.root == null)//tree is empty.
             return;
 
         /*Search if the node to delete does not exist */
-        if(!this.find(key))
+        if(!this.find(key))//operations for find method are also stored in MultiCounter[1]
             return ;//if key does not exist,return.
         Node parent,node;
         parent = node = this.root;
-
+        MultiCounter.increaseCounter(1,2);//two assignments made.
+        
         /*Find the node to delete,and it's parent: */
-        while(node.getKey() != key){
+        while(MultiCounter.increaseCounter(1) && node.getKey() != key){
             parent = node;
 
-            if(key < node.getKey())
+            if(MultiCounter.increaseCounter(1) && key < node.getKey())
                 node = node.getLeft();
             else
                 node = node.getRight();
+            
+            MultiCounter.increaseCounter(1,2);//two assignments made.
         }
 
         /*1) Node to delete,is a leaf. */
-        if(node.getLeft() == null && node.getRight() == null) {
-            if(node != this.root)//if node to delete is not the root.
-                if (parent.getRight() == node)
+        if(( MultiCounter.increaseCounter(1) && node.getLeft() == null ) && 
+        		( MultiCounter.increaseCounter(1) && node.getRight() == null) ) {
+        	
+            if(MultiCounter.increaseCounter(1) && node != this.root)//if node to delete is not the root.
+                if (MultiCounter.increaseCounter(1) && parent.getRight() == node)
                      parent.setRight(null);
                 else
                     parent.setLeft(null);
@@ -308,15 +341,21 @@ public class BinarySearchTreeWithPointers implements  BST{
                 this.root = null;//else set the root to null.
             
             this.size--;//decrease the size of the structure
+            
+            /*One operation for size-- and one operation for the assignment. */
+            MultiCounter.increaseCounter(1,2);
         }
 
         /*2) Node to delete has one child(left or right) */
-        else if(node.getLeft() == null || node.getRight() == null) {
+        else if(( MultiCounter.increaseCounter(1) && node.getLeft() == null ) || 
+        		( MultiCounter.increaseCounter(1) && node.getRight() == null ) ) {
             /*Find the child of the node: */
             Node childOfNodeToDelete = node.getLeft() == null ? node.getRight() : node.getLeft();
+            MultiCounter.increaseCounter(1,2);//one operation for the comparison,and one for the assignment.
+            
             /*If the node to delete is not the root: */
-            if (node != this.root)
-                if(parent.getLeft() == node)
+            if (MultiCounter.increaseCounter(1) && node != this.root)
+                if(MultiCounter.increaseCounter(1) && parent.getLeft() == node)
                     parent.setLeft(childOfNodeToDelete);
                 else
                     parent.setRight(childOfNodeToDelete);
@@ -324,15 +363,17 @@ public class BinarySearchTreeWithPointers implements  BST{
                 this.root = childOfNodeToDelete;
             
             this.size--;//decrease the size of the structure
+            MultiCounter.increaseCounter(1,2);//one operation for the size--,and one for the assignment.
 
         }
         /*3) Node to delete has two children(left and right) */
         else {
-            int minRightSubtreeElement = this.getMinimumKey(node.getRight());
+            int minRightSubtreeElement = this.getMinimumKey(node.getRight());//total operations to find this stored in counter[0].
             /*Delete the minimum element from right subtree node */
-            this.remove(minRightSubtreeElement);
+            this.removeHelpIterative(minRightSubtreeElement);
             /*Make the minimum element of the right subtree,the new root of this subtree */
             node.setKey(minRightSubtreeElement);
+            MultiCounter.increaseCounter(1);//one operation for setKey method.
             /*There is no need to update the size.The size will be updated from the above remove call. */
         }
     }
