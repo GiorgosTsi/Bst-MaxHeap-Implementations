@@ -1,5 +1,7 @@
 package pQueue.tuc.tsi.giorgos;
 
+import org.tuc.counter.MultiCounter;
+
 /**
  * Class that represents the node of the max heap
  * dynamic implementation.This node needs also a pointer
@@ -65,7 +67,8 @@ public class HeapNode {
 
     public boolean isLeaf() // Return true if this is a leaf node
     {
-        return (left == null) && (right == null);
+        return (MultiCounter.increaseCounter(2) && left == null) && 
+        		(MultiCounter.increaseCounter(2) && right == null);
     }
 
     public int getKey() {

@@ -1,5 +1,7 @@
 package pQueue.tuc.tsi.giorgos;
 
+import org.tuc.counter.MultiCounter;
+
 import Assert.tuc.tsi.giorgos.Assert;
 
 /**
@@ -68,6 +70,8 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 	/**
 	 * Method to insert a key in the max heap structure.
 	 * @param key to be inserted. 
+	 * Counts also the total number of operations(comparisons+
+	 * assignments) made while inserting an element in MultiCounter[1]
 	 *  */
 	@Override
 	public void insert(int key) {
@@ -77,6 +81,9 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 		/*1) Insert the key in the next free array index:(The next right most node available!) */
 		
 		this.heap[this.size++] = key;
+		
+		//2 assignments made.One for size++ and one for this.heap[size]=key
+		MultiCounter.increaseCounter(2, 2);
 		
 		/*2) Sift up the element if it's needed,to satisfy the heap property: */
 		
@@ -98,6 +105,8 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 		/*2)Delete the last element(old root) */
 		size--;//by decreasing the size of the array,we 'explicitly' delete that element.
 		//The new element inserted will override that value,so it is like deleting it.
+		
+		MultiCounter.increaseCounter(2);//one assignment for size--
 		
 		/*3) Sift down the new root,because we have to satisfy the max heap property .*/
 		siftDown(0);
@@ -157,7 +166,8 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 	 *  */
 	public boolean isLeaf(int pos) {
 		
-		return (pos >= size / 2) && (pos < size);
+		return (MultiCounter.increaseCounter(2) && pos >= size / 2) && 
+				(MultiCounter.increaseCounter(2) && pos < size);
 	}
 	
 /************************* Auxiliary methods for the array implementation of the heap ********************************/
@@ -202,9 +212,10 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 		
 		//pos>0 check is needed when the pos will get the index of the root!
 		//else we will have array index out of bounds exception for heap[parent(pos)]
-		while(pos>0 && ( this.heap[parent(pos)] < this.heap[pos] ) ) {
+		while(MultiCounter.increaseCounter(2) && ( pos>0 && this.heap[parent(pos)] < this.heap[pos]  ) ) {
 			this.swap(pos, parent(pos));
 			pos = parent(pos);//new pos to sift up is the parent's pos!
+			MultiCounter.increaseCounter(2);//one assignment made. pos=parent(pos)
 		}
 	}
 	
@@ -220,20 +231,26 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 	private void siftDown(int pos) {
 		
 		while(!this.isLeaf(pos)) {
+			
 			int higherChild = this.leftChild(pos);
 			int rightChild = this.rightChild(pos);
 			
+			MultiCounter.increaseCounter(2,2);
 			/*Find the higher of the two children(if there are 2 children,else the higher is the left one(only that exists!)) */
-			if((rightChild < size) && ( this.heap[rightChild] > this.heap[leftChild(pos)] ) )//if rightChild>=size,then there is only the left child.
+			if((MultiCounter.increaseCounter(2) && rightChild < size) && //if rightChild>=size,then there is only the left child.
+					(MultiCounter.increaseCounter(2) &&  this.heap[rightChild] > this.heap[leftChild(pos)] ) ) {
 				higherChild = rightChild;// Set this variable to greater child's value
+				MultiCounter.increaseCounter(2);//one assignment made.
+			}
 			
 			/*swap pos node with higher child node,only if pos node has smaller key value! */
-			if(this.heap[pos] < this.heap[higherChild]) 
+			if(MultiCounter.increaseCounter(2) && this.heap[pos] < this.heap[higherChild]) 
 				this.swap(pos, higherChild);
 			else 
 				return;//property is satisfied!
 			
 			pos = higherChild;
+			MultiCounter.increaseCounter(2);//one assignment 
 		}
 	}
 	
@@ -247,5 +264,13 @@ public class MaxHeapArrayImpl implements PriorityQueue{
 		int temp = this.heap[idx1];
 		this.heap[idx1] = this.heap[idx2];
 		this.heap[idx2] = temp;
+		MultiCounter.increaseCounter(2, 3);//3 assignments made.
+	}
+	
+	/**
+	 * @return size of the max heap
+	 *  */
+	public int size() {
+		return this.size;
 	}
 }

@@ -1,5 +1,7 @@
 package pQueue.tuc.tsi.giorgos;
 
+import org.tuc.counter.MultiCounter;
+
 import Assert.tuc.tsi.giorgos.Assert;
 
 /**
@@ -39,26 +41,28 @@ public class MaxHeapPointers implements PriorityQueue{
 	@Override
 	public void insert(int key) {
 		
-		if(this.isEmpty()) {//if heap is empty:
+		if(MultiCounter.increaseCounter(2) && this.isEmpty()) {//if heap is empty:
 			this.root = new HeapNode(key);
 			size++;
+			MultiCounter.increaseCounter(2,2);//2 assignments made. 
 			return;
 		}
 		//else
 		
-		/*1) Insert the element in the next right most node available! */
+		/*1) Insert the element in the next left most leaf(at bottom level) available! */
 		
 		//to insert an element to the left most available leaf(at the bottom level) we
 		//will find the father of the right most leaf(the new node) without changing logn complexity for insertion.
 		HeapNode curr,parent = this.getParentOfRightMostLeaf(root, ++size);//increase the size!!
 		curr = new HeapNode(key, parent);
+		MultiCounter.increaseCounter(2,2);
 		
-		if(parent.getLeft() == null) 
+		if(MultiCounter.increaseCounter(2) && parent.getLeft() == null) 
 			parent.setLeft(curr);
 		else 
 			parent.setRight(curr);
 		
-		
+		MultiCounter.increaseCounter(2);
 		/*2) Sift Up the node,because we have to satisfy the heap property! */
 		this.siftUp(curr);
 	}
@@ -73,31 +77,37 @@ public class MaxHeapPointers implements PriorityQueue{
 		
 		Assert.notFalse(size > 0, "Heap is empty");
 		int elementDeleted = root.getKey();
+		MultiCounter.increaseCounter(2);//one assignment.
 		
-		if(this.size == 1) {//if heap tree has only the root.
+		if(MultiCounter.increaseCounter(2) && this.size == 1) {//if heap tree has only the root.
 			this.root = null;
-			this.size--;;
+			this.size--;
+			MultiCounter.increaseCounter(2,2);
 			return elementDeleted;
 		}
 		
-		/*1) swap keys between root and right most leaf(bottom level).(Firstly we need to find the right most leaf!) */
+		/*1) swap keys between root and right most leaf(bottom level).(Firstly we need to find the right most leaf(at bottom lvl)!) */
 		
 		HeapNode rightMostNode = this.getRightMostLeaf(root, size);
+		MultiCounter.increaseCounter(2);
 		this.swapKeys(rightMostNode, root);//swap their keys.
 		
 		/*2) delete the new right most node(the old root!) */
 		
 		HeapNode parent = rightMostNode.getParent();
+		MultiCounter.increaseCounter(2);
 		
-		if(parent.getRight() == rightMostNode)//parent.right is the right most leaf!Should be deleted
+		if(MultiCounter.increaseCounter(2) && parent.getRight() == rightMostNode)//parent.right is the right most leaf!Should be deleted
 			parent.setRight(null);
 		else //parent.left is the right most leaf!Should be deleted.
 			parent.setLeft(null);
 		
+		MultiCounter.increaseCounter(2);
 		/*3) Sift Down the new root so we keep the property satisfied */
 		this.siftDown(root);
 		//decrease the size of the heap!
 		this.size--;
+		MultiCounter.increaseCounter(2);
 		
 		//return the deleted key
 		return elementDeleted;
@@ -149,12 +159,16 @@ public class MaxHeapPointers implements PriorityQueue{
     	
     	//make a node array as said above:
     	HeapNode[] heap = new HeapNode[keys.length];
+    	MultiCounter.increaseCounter(2);
+    	
     	for(int i=0; i<keys.length; i++)
     		heap[i] = new HeapNode(keys[i]);
     	
+    	MultiCounter.increaseCounter(2,keys.length);//made keys.length assignments.
     	//Make the heap tree by setting the pointers:
     	
     	this.root = heap[0];//set the root!
+    	MultiCounter.increaseCounter(2);
     	
     	for(int pos=0; pos < heap.length; pos++) {
     		
@@ -179,6 +193,8 @@ public class MaxHeapPointers implements PriorityQueue{
     		else 
     			heap[pos].setRight(null);
     		
+    		//in every step we do 3 if,else with one assignment every one.(One comparison plus one assignment)*3=6
+    		MultiCounter.increaseCounter(2,6); 
     	}
     	
     	/*Now we should siftDown all the non leaf elements to keep the property satisfied: */
@@ -205,22 +221,23 @@ public class MaxHeapPointers implements PriorityQueue{
 	 */
 	 private HeapNode getParentOfRightMostLeaf(HeapNode rootNode, int numberOfNodes) {
 		 
-		 if (numberOfNodes == 0 || numberOfNodes < 0) { // invalid
-			 // ERROR
+		 if (MultiCounter.increaseCounter(2) && numberOfNodes <= 0)  // invalid
 			 return null;
-		 }
 		 
 		 HeapNode current = rootNode;
 		 // binary of numberOfElements without leading zeros
 		 String asBinary= Integer.toBinaryString(numberOfNodes); 
+		 MultiCounter.increaseCounter(2,3); //2 assignments above and one more for int currentPos in for loop.
 		 // iterate from 2nd bit up to second to last bit 
-		 for (int currentPos = 1; currentPos< asBinary.length()-1; currentPos++) 
+		 for (int currentPos = 1;MultiCounter.increaseCounter(2) &&  currentPos< asBinary.length()-1; currentPos++) {
 			 if (asBinary.charAt(currentPos) == '0') 
 				 current = current.getLeft();
 			 
 			 else 
 				 current = current.getRight();
-		 	
+			 
+			 MultiCounter.increaseCounter(2);//one assignment made.
+		 }
 		 
 	 
 		 return current;
@@ -237,6 +254,7 @@ public class MaxHeapPointers implements PriorityQueue{
 		 
 		 HeapNode parent = this.getParentOfRightMostLeaf(rootNode, numberOfNodes);
 		 Assert.notNull(parent);//parent should not be null!
+		 MultiCounter.increaseCounter(2, 2);//2 operations to find parent.getRight
 		 return parent.getRight() == null ? parent.getLeft() : parent.getRight() ;
 	 }
 	 
@@ -249,9 +267,11 @@ public class MaxHeapPointers implements PriorityQueue{
 	 *  */
 	private void siftUp(HeapNode curr) {
 		
-		while( (curr != root) && ( curr.getParent().getKey() < curr.getKey() ) ) {
+		while( (MultiCounter.increaseCounter(2) && curr != root) && 
+				(MultiCounter.increaseCounter(2) &&  curr.getParent().getKey() < curr.getKey() ) ) {
 			swapKeys(curr, curr.getParent());
 			curr = curr.getParent();
+			MultiCounter.increaseCounter(2);
 		}
 			
 	}
@@ -270,16 +290,22 @@ public class MaxHeapPointers implements PriorityQueue{
 		while(!curr.isLeaf()) {
 			//find the greater value child:
 			HeapNode greaterValueNode = curr.getLeft();//left child exists for sure.
-			if(curr.getRight() != null && curr.getRight().getKey() > curr.getLeft().getKey() )
+			MultiCounter.increaseCounter(2);
+			
+			if((MultiCounter.increaseCounter(2) && curr.getRight() != null ) && 
+					(MultiCounter.increaseCounter(2) && curr.getRight().getKey() > curr.getLeft().getKey() )) {
 				greaterValueNode = curr.getRight();
+				MultiCounter.increaseCounter(2);
+			}
 			
 			//if curr's node key < greater value child's key swap their keys.
-			if(curr.getKey() < greaterValueNode.getKey())
+			if(MultiCounter.increaseCounter(2) && curr.getKey() < greaterValueNode.getKey())
 				swapKeys(greaterValueNode, curr);
 			else
 				return;//property is satisfied!
 			
 			curr = greaterValueNode;
+			MultiCounter.increaseCounter(2);
 		}
 	
 	}
@@ -321,7 +347,13 @@ public class MaxHeapPointers implements PriorityQueue{
         printHelp(root.getLeft(),spaces + 10);
 
     }
-		
+	
+    /**
+     * @return size of the max heap
+     *  */
+    public int size() {
+    	return this.size;
+    }
 		
 	 
 	 

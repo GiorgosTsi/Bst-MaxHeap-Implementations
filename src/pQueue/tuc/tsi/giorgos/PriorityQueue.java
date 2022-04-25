@@ -20,4 +20,7 @@ public interface PriorityQueue {
 	
 	/*Checks if the data structure is empty */
 	public boolean isEmpty();
+	
+	/*size of the queue */
+	public int size();
 }
