@@ -1,5 +1,7 @@
 package bst.tuc.tsi.giorgos;
 
+import org.tuc.counter.MultiCounter;
+
 /**
  * @author giorgos tsi
  * A static implementation of a binary search tree
@@ -93,20 +95,25 @@ public class BSTarrayImpl implements BST{
      * @param key of the node to insert.
      * value -2 to a left or right pointer means that pointer is NULL.
      * value -1 to root index means that the tree is empty.
+     * Also counts total operations done while inserting.
+     * (Assignments,Comparisons).The count is stored in
+     * MultiCounter[0] counter.
      * */
     @Override
     public void insert(int key) {
 
+    	MultiCounter.resetCounter(1);//reset MultiCounter[0].
         /*Check if there is empty space to insert a node: */
-        if(avail == END_OF_SPACE)//if avail=-1 there is available position.
+        if(MultiCounter.increaseCounter(1) && avail == END_OF_SPACE)//if avail=-1 there is available position.
             return;
 
         int arrayCurrentIdx = this.rootIndex;//current pointer.
         int parent = this.rootIndex;
         int newAvail;
+        MultiCounter.increaseCounter(1,2);//increase by 2,because two assignments made.
 
         /*If tree is empty: */
-        if(this.isEmpty()) {//avail==0
+        if(MultiCounter.increaseCounter(1) && this.isEmpty()) {//if root==-1 
             this.rootIndex = avail;//new index of the root is avail.
             this.array[0][avail] = key;
             //update the two pointers:
@@ -117,6 +124,8 @@ public class BSTarrayImpl implements BST{
             newAvail = this.array[right][avail];
             this.array[right][avail] = NULL;//right pointer is null.
             this.avail = newAvail;
+            
+            MultiCounter.increaseCounter(1, 6);//6 assignments have been made.
         }
 
         /*If tree is not empty: */
@@ -124,17 +133,19 @@ public class BSTarrayImpl implements BST{
             /*traverse the bst until you find
             * the correct position to insert the new node. */
             //if current == -2 that means, current =Null.
-            while(arrayCurrentIdx != NULL) {
+            while(MultiCounter.increaseCounter(1) && arrayCurrentIdx != NULL) {
                 parent = arrayCurrentIdx;
 
-                if (key < this.array[0][arrayCurrentIdx])//if key<currentNode.key
+                if (MultiCounter.increaseCounter(1) && key < this.array[0][arrayCurrentIdx])//if key<currentNode.key
                     arrayCurrentIdx = this.array[left][arrayCurrentIdx];//current = current.left
                 else//if key > currentNode.key
                     arrayCurrentIdx = this.array[right][arrayCurrentIdx];//current = current.right
+                
+                MultiCounter.increaseCounter(1,2);//2 assignments.Parent=current,current=current.left/right
             }
             //we found the parent of the new node.
             //find which child the new node will be.
-            if(key < this.array[0][parent])//if key < parent.key , insert in the left pointer
+            if(MultiCounter.increaseCounter(1) && key < this.array[0][parent])//if key < parent.key , insert in the left pointer
                 this.array[left][parent] = avail;//new node will be stored in avail idx!
             else
                 this.array[right][parent] = avail;//new node will be stored in avail idx!
@@ -151,9 +162,11 @@ public class BSTarrayImpl implements BST{
             this.array[right][avail] = NULL;//right = null
             this.avail = newAvail;
 
+            MultiCounter.increaseCounter(1,6);//6 assignments made.
         }
         
         this.size++;//increase the size of the structure.
+        MultiCounter.increaseCounter(1);//one operation for size++;
     }
 
     /**
@@ -167,33 +180,38 @@ public class BSTarrayImpl implements BST{
     @Override
     public void remove(int key) {
     	
-    	if(this.isEmpty())
+    	if(MultiCounter.increaseCounter(1) && this.isEmpty())
     		return;
     	
     	/*Firstly we need to check if the element exists. */
-    	if(!this.find(key))
+    	if(!this.find(key))//# of operations for find are also stored in counter 2
     		return;//if key does not exist,we cannot remove it.return.
     	int oldAvail,parent,curr = this.rootIndex;
     	parent = curr;
+    	MultiCounter.increaseCounter(1,2);//two assignments made.
     	
     	/*Find the parent of the node to delete: */
-    	while(this.array[0][curr] != key) {//iterate until curr index reach the node to delete.
+    	while(MultiCounter.increaseCounter(1) && this.array[0][curr] != key) {//iterate until curr index reach the node to delete.
     		parent = curr;
     		
-    		if(key < this.array[0][curr])
+    		if(MultiCounter.increaseCounter(1) && key < this.array[0][curr])
     			curr = this.array[left][curr];
     		else 
     			curr = this.array[right][curr];	
+    		
+    		MultiCounter.increaseCounter(1,2);//two assignments made.parent=curr and curr=curr.left/right 
     	}
     	//curr index points to the node to delete,and parent index is the parent of curr.
     	
     	
     	/************************1) If node to delete is a leaf: ***********************/
     	
-    	if(this.array[left][curr] == NULL  &&  this.array[right][curr] == NULL) { //if left and right pointers are null,node is a leaf.
-    		if(curr != this.rootIndex) {
+    	if( ( MultiCounter.increaseCounter(1) && this.array[left][curr] == NULL ) &&  
+    			( MultiCounter.increaseCounter(1) && this.array[right][curr] == NULL ) ) { //if left and right pointers are null,node is a leaf.
+    		
+    		if(MultiCounter.increaseCounter(1) && curr != this.rootIndex) {
     			
-    			if(this.array[left][parent] == curr){//if curr is the left child of the parent.
+    			if(MultiCounter.increaseCounter(1) && this.array[left][parent] == curr){//if curr is the left child of the parent.
     				//set the left pointer of the parent null
     				this.array[left][parent] = NULL;
     				oldAvail = this.avail;
@@ -212,18 +230,24 @@ public class BSTarrayImpl implements BST{
     			oldAvail = this.avail;
     			this.updateFreeList(curr, oldAvail);
     		}
+    		MultiCounter.increaseCounter(1,2);//two assignments made.
+			//# operations for updateFreeList method are also stored in counter 1.
+    		
     		this.size--;//decrease the size of the structure.
-    	
+    		MultiCounter.increaseCounter(1);//one operation for size--;
     	}
+    	
     	/********************2) Node to delete has one child(left or right) *********************/
     	
-    	else if(this.array[left][curr] == NULL  ||  this.array[right][curr] == NULL) {
+    	else if( ( MultiCounter.increaseCounter(1) && this.array[left][curr] == NULL ) || 
+    			 ( MultiCounter.increaseCounter(1) && this.array[right][curr] == NULL ) ) {
     		
     		int childOfNodeToDelete = this.array[left][curr] == NULL ? this.array[right][curr] : this.array[left][curr];
+    		MultiCounter.increaseCounter(1,2);//two operations made to find the child of node to delete.
     		
-    		if(curr != this.rootIndex) {
+    		if(MultiCounter.increaseCounter(1) && curr != this.rootIndex) {
     			
-    			if(this.array[left][parent] == curr){//if curr is the left child of the parent.
+    			if(MultiCounter.increaseCounter(1) && this.array[left][parent] == curr){//if curr is the left child of the parent.
     				//set the left pointer of the parent to curr's child.
     				this.array[left][parent] = childOfNodeToDelete;
     				oldAvail = this.avail;
@@ -244,18 +268,25 @@ public class BSTarrayImpl implements BST{
 				this.updateFreeList(curr, oldAvail);
 			}
     		
+    		MultiCounter.increaseCounter(1,2);//two assignments made.
+			//# operations for updateFreeList method are also stored in counter 1.
+    		
     		this.size--;//decrease the size of the structure.
+    		MultiCounter.increaseCounter(1);//one operation for size--;
     	}
     	
     	/***************** 3)Node to delete has both children. ******************************/
     	else {
 			int minRightSubtreeNode = this.findMinimumKeyNode(this.array[right][curr]);
 			int minRightSubtreeElement = this.array[0][minRightSubtreeNode];
+			MultiCounter.increaseCounter(1);//one assignment.
+			
 			 /*Delete the minimum element from right subtree node */
 			this.remove(minRightSubtreeElement);//the free list will be updated automatically.
 			/*Make the minimum element of the right subtree,the new root of this subtree */
 			this.array[0][curr] = minRightSubtreeElement;
-			/*The size of the list will be updated from the remove call made before. */
+			MultiCounter.increaseCounter(1);//one assignment.
+			/*The size of the bst will be updated from the remove call made before. */
 		}
     	
     }
@@ -268,14 +299,17 @@ public class BSTarrayImpl implements BST{
      *  */
     private int findMinimumKeyNode(int root) {
     	
-    	if(root == NULL) // if tree is empty.
+    	if(MultiCounter.increaseCounter(1) && root == NULL) // if tree is empty.
     		return -1;
     	
     	int current = root;
+    	MultiCounter.increaseCounter(1);//one assignment.
     	
     	/*Minimum key node is the leftmost one. */
-    	while(this.array[left][current] != NULL) 
+    	while(MultiCounter.increaseCounter(1) && this.array[left][current] != NULL) {
     		current = this.array[left][current];
+    		MultiCounter.increaseCounter(1);//one assignment.
+    	}
     	
     	//current now is the index with the minimum key node.
     	return current;
@@ -292,6 +326,7 @@ public class BSTarrayImpl implements BST{
     	// append the free list:
     	this.avail = newAvail;
     	this.array[right][newAvail] = oldAvail;//old avail value will be the next position to insert an element.
+    	MultiCounter.increaseCounter(1,2);//two assignments made! 
     }
 
     
@@ -304,17 +339,20 @@ public class BSTarrayImpl implements BST{
     public boolean find(int key) {
     	
     	int curr = this.rootIndex;
-    	
-    	while(curr != NULL) 
-    		if(key == this.array[0][curr])
+    	MultiCounter.increaseCounter(1);//one assignment made.
+    	while(MultiCounter.increaseCounter(1) && curr != NULL) {
+    		
+    		if(MultiCounter.increaseCounter(1) && key == this.array[0][curr])
     			return true;
     		
-    		else if(key < this.array[0][curr])//if key < currentNode.getKey
+    		else if(MultiCounter.increaseCounter(1) && key < this.array[0][curr])//if key < currentNode.getKey
     			curr = this.array[left][curr]; // curr = curr.left
     		
     		else // key > currentNode.getKey
     			curr = this.array[right][curr]; // curr = curr.right
     	
+    		MultiCounter.increaseCounter(1);//one assignment made.curr=curr.right/left
+    	}
     	//to be here tree is empty or the key does not exist => return false
         return false;
     }
@@ -352,7 +390,7 @@ public class BSTarrayImpl implements BST{
      *  */
     public void printArray() {
     	System.out.println("Key left right");
-    	for(int i=0; i<15 /*this.array[0].length*/; i++) {
+    	for(int i=0; i<this.array[0].length; i++) {
     		System.out.print("\n");
     		for(int j=0 ; j<this.array.length; j++) {
     			System.out.print(this.array[j][i] + "   ");
