@@ -82,6 +82,11 @@ public class Main1 {
         binarySearchTree.printBST();
         System.out.println("Size of tree: " + binarySearchTree.size() );
 
+        System.out.println("\n\n3)Remove a node which does not exist:(178)");
+        binarySearchTree.remove(178);
+        binarySearchTree.printBST();
+        System.out.println("Size of tree: " + binarySearchTree.size() );
+        
         System.out.println("\n\n3)Remove a node with two children(root):5");
         binarySearchTree.remove(5);
         

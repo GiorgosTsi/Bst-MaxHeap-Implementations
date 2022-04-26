@@ -18,16 +18,10 @@ import pQueue.tuc.tsi.giorgos.PriorityQueue;
  *  */
 public class Tester {
 
-	private BinarySearchTreeWithPointers bstP;
-	private int totalOperationsInsertionBstPointers;
 	private int[] elementsToInsert;
 	private int[] elementsToDelete;
 	
 	public Tester() throws IOException {
-		
-		/* */
-		this.bstP = new BinarySearchTreeWithPointers();
-		this.totalOperationsInsertionBstPointers = 0;
 		
 		/*Load The elements to insert/delete */
 		System.out.println("Loading elements...");
@@ -72,6 +66,14 @@ public class Tester {
 		System.out.println("*BUILD HEAP:");
 		this.doBuildHeapTest();
 		
+		for (int i = 0; i < elementsToDelete.length; i++) 
+			for (int j = i + 1 ; j < elementsToDelete.length; j++) 
+				if (elementsToDelete[i] == (elementsToDelete[j]))  // got the duplicate element 
+					System.out.println("duplicate element in delete keys list: " + elementsToDelete[i]);
+				
+			
+		
+		
 	}
 	
 	public void doBinarySearchTreeTest(BST bst) {
@@ -93,9 +95,10 @@ public class Tester {
 		
 		begin = System.nanoTime();
 		for(int i=0; i<elementsToDelete.length; i++) {
-			bst.remove(elementsToInsert[i]);
+			bst.remove(elementsToDelete[i]);
 			totalOperations+=MultiCounter.getCount(1);
 			MultiCounter.resetCounter(1);
+			//System.out.println("size " + bst.size());
 		}
 		end = System.nanoTime();
 		System.out.println("	FOR DELETIONS: ");

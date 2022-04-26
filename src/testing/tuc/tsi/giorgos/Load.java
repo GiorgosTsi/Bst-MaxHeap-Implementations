@@ -41,6 +41,7 @@ public class Load {
 			elementsToInsert[i] = raf.readInt();//read integers from the file and store them to the array.
 		
 		
+		raf.close();
 		return elementsToInsert;
 	}
 	
@@ -58,10 +59,11 @@ public class Load {
 		/*int array to return: */
 		int[] elementsToDelete = new int[100];//100 elements
 		
-		for(int i=0 ; i<100; i++)
+		for(int i=0 ; i<100; i++) 
 			elementsToDelete[i] = raf.readInt();//read integers from the file and store them to the array.
 		
 		
+		raf.close();
 		return elementsToDelete;
 	}
 
