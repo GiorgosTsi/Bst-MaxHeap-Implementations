@@ -1,5 +1,7 @@
 package testing.tuc.tsi.giorgos;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -36,11 +38,22 @@ public class Load {
 		
 		/*int array to return: */
 		int[] elementsToInsert = new int[1000000];//10^6 elements
+		int totalBytesForIntegers = 1000000 * 4;
+		byte[] buffer = new byte[totalBytesForIntegers];
 		
+		raf.seek(0);//start reading from index 0.
+		raf.read(buffer);//read all the integers(10^6) in one buffer.One disk access made!
+		ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
+		DataInputStream dis = new DataInputStream(bis);
+		
+		/*Load all the elements to the array: */
 		for(int i=0 ; i<1000000; i++)
-			elementsToInsert[i] = raf.readInt();//read integers from the file and store them to the array.
+			elementsToInsert[i] = dis.readInt();//read integers from the file and store them to the array.
 		
 		
+		//close streams and return.
+		dis.close();
+		bis.close();
 		raf.close();
 		return elementsToInsert;
 	}
@@ -58,11 +71,21 @@ public class Load {
 		
 		/*int array to return: */
 		int[] elementsToDelete = new int[100];//100 elements
+		int totalBytesForIntegers = 100 * 4;
+		byte[] buffer = new byte[totalBytesForIntegers];
+		
+		raf.seek(0);//start reading from index 0.
+		raf.read(buffer);//read all the integers(100) in one buffer.One disk access made!
+		ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
+		DataInputStream dis = new DataInputStream(bis);
 		
 		for(int i=0 ; i<100; i++) 
-			elementsToDelete[i] = raf.readInt();//read integers from the file and store them to the array.
+			elementsToDelete[i] = dis.readInt();//read integers from the file and store them to the array.
 		
 		
+		//close streams and return.
+		dis.close();
+		bis.close();
 		raf.close();
 		return elementsToDelete;
 	}

@@ -88,7 +88,7 @@ public class Tester {
 		end = System.nanoTime();//ending time for insertions.
 		System.out.println("	FOR INSERTIONS: ");
 		System.out.println("		Size of the bst structure: " + bst.size());
-		System.out.println("		Total time for 10^6 insertions  : " + (end-begin) + " nanoseconds" );
+		System.out.println("		Total time for 10^6 insertions  : " + (end-begin) + " nanoseconds or "+(end-begin)/Math.pow(10,9)+" seconds.");
 		System.out.println("		Mean Operations while inserting " + (totalOperations/elementsToInsert.length));
 		
 		totalOperations = 0;
@@ -103,7 +103,7 @@ public class Tester {
 		end = System.nanoTime();
 		System.out.println("	FOR DELETIONS: ");
 		System.out.println("		Size of the bst structure after removing 100 elements: " + bst.size());
-		System.out.println("		Total time for 100 deletions  : " + (end-begin) + " nanoseconds" );
+		System.out.println("		Total time for 100 deletions  : " + (end-begin) + " nanoseconds or "+(end-begin)/Math.pow(10,9)+" seconds.");
 		System.out.println("		Mean Operations while deleting " + (totalOperations/this.elementsToDelete.length));
 	}
 	
@@ -122,7 +122,7 @@ public class Tester {
 		
 		System.out.println("	FOR INSERTIONS: ");
 		System.out.println("		Size of the Pqueue structure: " + q.size());
-		System.out.println("		Total time for 10^6 insertions  : " + (end-begin) + " nanoseconds" );
+		System.out.println("		Total time for 10^6 insertions  : " + (end-begin) + " nanoseconds or "+(end-begin)/Math.pow(10,9)+" seconds.");
 		System.out.println("		Mean Operations while inserting " + (totalOperations/elementsToInsert.length));
 		
 		totalOperations = 0;
@@ -137,7 +137,7 @@ public class Tester {
 		end = System.nanoTime();
 		System.out.println("\tFOR DELETIONS: ");
 		System.out.println("\t\tSize of the Pqueue structure after removing 100 elements: " + q.size());
-		System.out.println("\t\tTotal time for 100 deletions  : " + (end-begin) + " nanoseconds" );
+		System.out.println("\t\tTotal time for 100 deletions  : " + (end-begin) + " nanoseconds or "+(end-begin)/Math.pow(10,9)+" seconds.");
 		System.out.println("\t\tMean Operations while deleting " + (totalOperations/100));
 	}
 	
@@ -153,7 +153,7 @@ public class Tester {
 		mHeapArrayImpl = new MaxHeapArrayImpl(this.elementsToInsert);//build heap with given keys from the begin.
 		end = System.nanoTime();
 		System.out.println("\t\tMean Operations for build Heap: " + MultiCounter.getCount(2));
-		System.out.println("\t\tTotal time for build heap: " + (end-start) + " nanoseconds" );
+		System.out.println("\t\tTotal time for build heap: " + (end-start) + " nanoseconds or "+(end-start)/Math.pow(10,9)+" seconds.");
 		
 		/*BUILD HEAP FOR DYNAMIC IMPLEMENTATION: */
 		start = System.nanoTime();
@@ -162,7 +162,7 @@ public class Tester {
 		maxHeapPointers = new MaxHeapPointers(elementsToInsert);//build heap with given keys from the begin.
 		end = System.nanoTime();
 		System.out.println("\t\tMean Operations for build Heap: " + MultiCounter.getCount(2));
-		System.out.println("\t\tTotal time for build heap: " + (end-start) + " nanoseconds" );
+		System.out.println("\t\tTotal time for build heap: " + (end-start) + " nanoseconds or "+(end-start)/Math.pow(10,9)+" seconds.");
 		
 	}
 }
