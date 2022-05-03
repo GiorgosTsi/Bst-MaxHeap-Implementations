@@ -152,7 +152,7 @@ public class Tester {
 		System.out.println("\tMeasurements for build heap with heap static implemented:");
 		mHeapArrayImpl = new MaxHeapArrayImpl(this.elementsToInsert);//build heap with given keys from the begin.
 		end = System.nanoTime();
-		System.out.println("\t\tMean Operations for build Heap: " + MultiCounter.getCount(2));
+		System.out.println("\t\tOperations for build Heap: " + MultiCounter.getCount(2));
 		System.out.println("\t\tTotal time for build heap: " + (end-start) + " nanoseconds or "+(end-start)/Math.pow(10,9)+" seconds.");
 		
 		/*BUILD HEAP FOR DYNAMIC IMPLEMENTATION: */
@@ -161,7 +161,7 @@ public class Tester {
 		System.out.println("\tMeasurements for build heap with heap dynamic implemented:");
 		maxHeapPointers = new MaxHeapPointers(elementsToInsert);//build heap with given keys from the begin.
 		end = System.nanoTime();
-		System.out.println("\t\tMean Operations for build Heap: " + MultiCounter.getCount(2));
+		System.out.println("\t\tOperations for build Heap: " + MultiCounter.getCount(2));
 		System.out.println("\t\tTotal time for build heap: " + (end-start) + " nanoseconds or "+(end-start)/Math.pow(10,9)+" seconds.");
 		
 	}
